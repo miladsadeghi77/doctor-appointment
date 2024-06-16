@@ -1,10 +1,9 @@
 package com.blubank.doctorappointment.service.impl;
 
-import com.blubank.doctorappointment.dto.DeleteAppointmentRequestDTO;
-import com.blubank.doctorappointment.dto.InsertAppointmentRequestDTO;
-import com.blubank.doctorappointment.dto.OpenAppointmentListRequestDTO;
-import com.blubank.doctorappointment.dto.TakeOpenAppointmentRequestDTO;
+import com.blubank.doctorappointment.dao.GetOpenAppointmentListDAO;
+import com.blubank.doctorappointment.dto.*;
 import com.blubank.doctorappointment.enums.ResponseStatus;
+import com.blubank.doctorappointment.mapper.OpenAppointmentMapper;
 import com.blubank.doctorappointment.model.Appointment;
 import com.blubank.doctorappointment.model.ResponseModel;
 import com.blubank.doctorappointment.repository.AppointmentRepoImpl;
@@ -27,10 +26,12 @@ import java.util.*;
 public class AppointmentServiceImpl implements AppointmentService {
 
     private AppointmentRepoImpl appointmentRepoImpl;
+    private OpenAppointmentMapper openAppointmentMapper;
 
     @Autowired
-    public AppointmentServiceImpl(@Lazy AppointmentRepoImpl appointmentRepoImpl) {
+    public AppointmentServiceImpl(@Lazy AppointmentRepoImpl appointmentRepoImpl, OpenAppointmentMapper openAppointmentMapper) {
         this.appointmentRepoImpl = appointmentRepoImpl;
+        this.openAppointmentMapper = openAppointmentMapper;
     }
 
     private final int THIRTY_MINUTES_PERIODS = 30;
@@ -131,16 +132,17 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public ResponseModel openAppointmentList(OpenAppointmentListRequestDTO openAppointmentListRequestDTO) {
+    public ResponseModel getOpenAppointmentList(OpenAppointmentListRequestDTO openAppointmentListRequestDTO) {
         ResponseModel responseModel = new ResponseModel();
-        List<Appointment> appointmentList = new ArrayList<>();
+        List<GetOpenAppointmentListResponseDTO> appointmentList = new ArrayList<>();
         String date = openAppointmentListRequestDTO.getAppointmentDate();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date insertDate = null;
         try {
             insertDate = formatter.parse(date);
-            appointmentList = appointmentRepoImpl.openAppointmentList(insertDate);
-
+            for (GetOpenAppointmentListDAO appointmentListDAO : appointmentRepoImpl.getOpenAppointmentList(insertDate)) {
+                appointmentList.add(openAppointmentMapper.convertToDTO(appointmentListDAO));
+            }
         } catch (ParseException ignore) {
         }
         responseModel.setData(appointmentList);

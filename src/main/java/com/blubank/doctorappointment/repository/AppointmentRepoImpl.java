@@ -1,5 +1,6 @@
 package com.blubank.doctorappointment.repository;
 
+import com.blubank.doctorappointment.dao.GetOpenAppointmentListDAO;
 import com.blubank.doctorappointment.model.Appointment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -34,8 +35,8 @@ public class AppointmentRepoImpl {
         }
     }
 
-    public List<Appointment> openAppointmentList(Date insertDate){
-        List<Appointment> appointmentList = appointmentRepo.findByTakenFalseAndInsertDate(insertDate);
+    public List<GetOpenAppointmentListDAO> getOpenAppointmentList(Date insertDate){
+        List<GetOpenAppointmentListDAO> appointmentList = appointmentRepo.findByTakenFalseAndInsertDate(insertDate);
         return appointmentList;
     }
 
