@@ -43,11 +43,9 @@ public class AppointmentRepoImpl {
         Optional<Appointment> appointment = appointmentRepo.findAppointmentByAppointmentCode(appointmentCode);
         return appointment;
     }
-    public boolean deleteOpenAppointmentByAppointmentCode(String appointmentCode) {
-        Boolean isDeleted = false;
-            try{
-                isDeleted = appointmentRepo.deleteByAppointmentCode(appointmentCode);
-            }catch (Exception ignore){}
-        return isDeleted;
+    public void deleteOpenAppointmentById(Long appointmentId) {
+        try{
+            appointmentRepo.deleteById(appointmentId);
+        }catch (Exception ignore){}
     }
 }

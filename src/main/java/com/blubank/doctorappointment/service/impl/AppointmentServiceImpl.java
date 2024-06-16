@@ -100,23 +100,23 @@ public class AppointmentServiceImpl implements AppointmentService {
         Optional<Appointment> openAppointment = appointmentRepoImpl.findAppointmentByAppointmentCode(appointmentCode);
 
         if (openAppointment.isPresent() && !openAppointment.get().isTaken()) {
-            boolean isDeleted = appointmentRepoImpl.deleteOpenAppointmentByAppointmentCode(appointmentCode);
+            appointmentRepoImpl.deleteOpenAppointmentById(openAppointment.get().getId());
             responseModel.setData(Collections.singletonList(HttpStatus.OK));
             responseModel.setMessage("Appointment was Deleted");
             responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
-            return responseModel;
 
         } else if (openAppointment.isPresent() && openAppointment.get().isTaken()) {
             responseModel.setData(Collections.singletonList(HttpStatus.NOT_ACCEPTABLE));
             responseModel.setMessage("Not Found Open Appointment");
             responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
-            return responseModel;
+
         } else {
             responseModel.setData(Collections.singletonList(HttpStatus.NOT_FOUND));
-            responseModel.setMessage(" Appointment was added");
+            responseModel.setMessage("Not Found Appointment With The Appointment Code ");
             responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
-            return responseModel;
         }
+        return responseModel;
+
     }
 
     @Async

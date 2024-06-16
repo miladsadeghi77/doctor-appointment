@@ -18,13 +18,12 @@ public interface AppointmentRepo extends JpaRepository<Appointment, Long> {
             "a.startTime, a.endTime, a.insertDate, a.appointmentCode, a.isTaken, p.name, p.phoneNumber)" +
             " from appointment a left join patient p on a.appointmentCode = p.appointment.appointmentCode " +
             "where a.insertDate = :insertDate")
-    GetAppointmentListResponseDAO getByInsertDate(LocalDate insertDate);
+    GetAppointmentListResponseDAO getByInsertDate(Date insertDate);
 
     @Query("select a from appointment a where a.isTaken = false and a.insertDate = :insertDate")
     List<Appointment> findByTakenFalseAndInsertDate(Date insertDate);
-    @Query("from appointment a where a.isTaken = false " +
-            " And a.appointmentCode = :appointmentCode")
-    Boolean deleteByAppointmentCode(String appointmentCode);
-
+   /* @Query("DELETE from appointment a where a.isTaken = false And a.appointmentCode = :appointmentCode")
+    Boolean removeAppointmentByAppointmentCode(String appointmentCode)*/
+    @Query("select a from appointment a where a.appointmentCode = :appointmentCode ")
     Optional<Appointment> findAppointmentByAppointmentCode(String appointmentCode);
 }
