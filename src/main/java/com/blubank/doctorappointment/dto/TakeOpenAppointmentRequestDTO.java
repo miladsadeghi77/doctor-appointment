@@ -8,15 +8,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TakeOpenAppointmentRequestDTO {
-    private Long appointmentId;
+    private String appointmentCode;
     private String name;
+
     private String phoneNumber;
 
 
     @Override
     public String toString() {
         return "TakeOpenAppointmentRequestDTO{" +
-                "appointmentId=" + appointmentId +
+                "appointmentCode=" + appointmentCode +
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';

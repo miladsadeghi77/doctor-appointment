@@ -1,4 +1,4 @@
-package com.blubank.doctorappointment.service.impl;
+package com.blubank.doctorappointment.service.appointment.impl;
 
 import com.blubank.doctorappointment.dto.DeleteAppointmentRequestDTO;
 import com.blubank.doctorappointment.dto.InsertAppointmentRequestDTO;
@@ -6,12 +6,13 @@ import com.blubank.doctorappointment.dto.OpenAppointmentListRequestDTO;
 import com.blubank.doctorappointment.dto.TakeOpenAppointmentRequestDTO;
 import com.blubank.doctorappointment.enums.ResponseStatus;
 import com.blubank.doctorappointment.model.Appointment;
+import com.blubank.doctorappointment.model.Patient;
 import com.blubank.doctorappointment.model.ResponseModel;
-import com.blubank.doctorappointment.repository.AppointmentRepoImpl;
-import com.blubank.doctorappointment.service.AppointmentService;
+import com.blubank.doctorappointment.repository.appointment.impl.AppointmentRepoImpl;
+import com.blubank.doctorappointment.service.appointment.AppointmentService;
+import com.blubank.doctorappointment.service.patient.impl.PatientServiceImpl;
 import com.blubank.doctorappointment.util.AppointmentUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,12 @@ import java.util.*;
 public class AppointmentServiceImpl implements AppointmentService {
 
     private AppointmentRepoImpl appointmentRepoImpl;
+    private PatientServiceImpl patientServiceImpl;
 
     @Autowired
-    public AppointmentServiceImpl(@Lazy AppointmentRepoImpl appointmentRepoImpl) {
+    public AppointmentServiceImpl(AppointmentRepoImpl appointmentRepoImpl, PatientServiceImpl patientServiceImpl) {
         this.appointmentRepoImpl = appointmentRepoImpl;
+        this.patientServiceImpl = patientServiceImpl;
     }
 
     private final int THIRTY_MINUTES_PERIODS = 30;
@@ -41,12 +44,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         ResponseModel responseModel = new ResponseModel();
         List<Appointment> appointmentList = new ArrayList<>();
         String date = insertAppointmentRequestDTO.getInsertDate();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date insertDate = null;
-        try {
-            insertDate = formatter.parse(date);
-        } catch (ParseException ignore) {
-        }
+        Date insertDate = AppointmentUtil.dateToString(date);
 
         LocalTime startTime = LocalTime.parse(insertAppointmentRequestDTO.getStartTime());
         LocalTime endTime = LocalTime.parse(insertAppointmentRequestDTO.getEndTime());
@@ -120,15 +118,44 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Async
+    @Transactional
     @Override
     public ResponseModel takeOpenAppointment(TakeOpenAppointmentRequestDTO takeOpenAppointmentRequestDTO) {
         ResponseModel responseModel = new ResponseModel();
+        Optional<Appointment> openAppointment =
+                appointmentRepoImpl.findAppointmentByAppointmentCode(takeOpenAppointmentRequestDTO.getAppointmentCode());
 
-        takeOpenAppointmentRequestDTO.getAppointmentId();
-        takeOpenAppointmentRequestDTO.getName();
-        takeOpenAppointmentRequestDTO.getPhoneNumber();
+        if (openAppointment.isPresent() && openAppointment.get().isTaken()) {
+            responseModel.setData(null);
+            responseModel.setMessage("Not Found Open Appointment");
+            responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
+            return responseModel;
+
+        } else if ( !openAppointment.isPresent()){
+            responseModel.setData(null);
+            responseModel.setMessage("Not Found Appointment With The Appointment Code ");
+            responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
+            return responseModel;
+        }
+
+        insertPatient(takeOpenAppointmentRequestDTO, openAppointment);
+        openAppointment.get().setTaken(true);
+        appointmentRepoImpl.insertAppointment(openAppointment.get());
+        String insertDate = AppointmentUtil.dateToString(openAppointment.get().getInsertDate());
+        StringBuilder sb = new StringBuilder();
+        sb.append(" Patient take appointment: ")
+                .append(openAppointment.get().getStartTime())
+                .append(" - ")
+                .append(openAppointment.get().getEndTime())
+                .append(" On ")
+                .append(insertDate);
+
+        responseModel.setData(null);
+        responseModel.setMessage(sb.toString());
+        responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
         return responseModel;
     }
+
 
     @Override
     public ResponseModel openAppointmentList(OpenAppointmentListRequestDTO openAppointmentListRequestDTO) {
@@ -147,6 +174,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         responseModel.setMessage("Open Appointment list");
         responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
         return responseModel;
+    }
+
+    private void insertPatient(TakeOpenAppointmentRequestDTO takeOpenAppointmentRequestDTO, Optional<Appointment> openAppointment) {
+        Patient patientBeforeInsert = new Patient();
+        patientBeforeInsert.setAppointment(openAppointment.get());
+        patientBeforeInsert.setName(takeOpenAppointmentRequestDTO.getName());
+        patientBeforeInsert.setPhoneNumber(takeOpenAppointmentRequestDTO.getPhoneNumber());
+        patientServiceImpl.insertPatient(patientBeforeInsert);
     }
 
 }

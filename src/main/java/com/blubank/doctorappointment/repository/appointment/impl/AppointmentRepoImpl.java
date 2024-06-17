@@ -1,6 +1,7 @@
-package com.blubank.doctorappointment.repository;
+package com.blubank.doctorappointment.repository.appointment.impl;
 
 import com.blubank.doctorappointment.model.Appointment;
+import com.blubank.doctorappointment.repository.appointment.AppointmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
@@ -48,4 +49,5 @@ public class AppointmentRepoImpl {
             appointmentRepo.deleteById(appointmentId);
         }catch (Exception ignore){}
     }
+
 }

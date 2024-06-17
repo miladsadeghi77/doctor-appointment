@@ -1,4 +1,4 @@
-package com.blubank.doctorappointment.repository;
+package com.blubank.doctorappointment.repository.appointment;
 
 import com.blubank.doctorappointment.dao.GetAppointmentListResponseDAO;
 import com.blubank.doctorappointment.model.Appointment;
@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

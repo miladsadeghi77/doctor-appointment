@@ -1,11 +1,9 @@
 package com.blubank.doctorappointment.controller;
 
-import com.blubank.doctorappointment.dto.DeleteAppointmentRequestDTO;
-import com.blubank.doctorappointment.dto.InsertAppointmentRequestDTO;
 import com.blubank.doctorappointment.dto.OpenAppointmentListRequestDTO;
 import com.blubank.doctorappointment.dto.TakeOpenAppointmentRequestDTO;
 import com.blubank.doctorappointment.model.ResponseModel;
-import com.blubank.doctorappointment.service.impl.AppointmentServiceImpl;
+import com.blubank.doctorappointment.service.appointment.impl.AppointmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +19,20 @@ public class PatientController {
     @Autowired
     AppointmentServiceImpl doctorAppointmentService;
 
-    @RequestMapping(path = "/getDoctorOpenAppointmentList",method = RequestMethod.GET)
-    public ResponseEntity getDoctorOpenAppointmentList(@RequestBody OpenAppointmentListRequestDTO openAppointmentList){
+    @RequestMapping(path = "/getOpenAppointmentList",method = RequestMethod.GET)
+    public ResponseEntity getOpenAppointmentList(@RequestBody OpenAppointmentListRequestDTO openAppointmentList){
 
         System.out.println("POST Request.... " + openAppointmentList.toString());
         ResponseModel responseModel = doctorAppointmentService.openAppointmentList(openAppointmentList);
+
+        return new ResponseEntity(responseModel,null, HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/takeOpenAppointment",method = RequestMethod.POST)
+    public ResponseEntity takeOpenAppointment(@RequestBody TakeOpenAppointmentRequestDTO appointmentDTO){
+        //todo
+        System.out.println("POST Request.... " + appointmentDTO.toString());
+        ResponseModel responseModel = doctorAppointmentService.takeOpenAppointment(appointmentDTO);
 
         return new ResponseEntity(responseModel,null, HttpStatus.OK);
     }
