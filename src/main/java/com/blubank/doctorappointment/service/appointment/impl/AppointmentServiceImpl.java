@@ -1,5 +1,6 @@
 package com.blubank.doctorappointment.service.appointment.impl;
 
+import com.blubank.doctorappointment.dao.GetOpenAppointmentListDAO;
 import com.blubank.doctorappointment.dto.DeleteAppointmentRequestDTO;
 import com.blubank.doctorappointment.dto.InsertAppointmentRequestDTO;
 import com.blubank.doctorappointment.dto.OpenAppointmentListRequestDTO;
@@ -158,15 +159,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
     @Override
-    public ResponseModel openAppointmentList(OpenAppointmentListRequestDTO openAppointmentListRequestDTO) {
+    public ResponseModel getOpenAppointmentList(OpenAppointmentListRequestDTO openAppointmentListRequestDTO) {
         ResponseModel responseModel = new ResponseModel();
-        List<Appointment> appointmentList = new ArrayList<>();
+        List<GetOpenAppointmentListDAO> appointmentList = new ArrayList<>();
         String date = openAppointmentListRequestDTO.getAppointmentDate();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date insertDate = null;
         try {
             insertDate = formatter.parse(date);
-            appointmentList = appointmentRepoImpl.openAppointmentList(insertDate);
+            appointmentList = appointmentRepoImpl.getOpenAppointmentList(insertDate);
 
         } catch (ParseException ignore) {
         }

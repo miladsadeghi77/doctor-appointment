@@ -23,7 +23,7 @@ public class PatientController {
     public ResponseEntity getOpenAppointmentList(@RequestBody OpenAppointmentListRequestDTO openAppointmentList){
 
         System.out.println("POST Request.... " + openAppointmentList.toString());
-        ResponseModel responseModel = doctorAppointmentService.openAppointmentList(openAppointmentList);
+        ResponseModel responseModel = doctorAppointmentService.getOpenAppointmentList(openAppointmentList);
 
         return new ResponseEntity(responseModel,null, HttpStatus.OK);
     }
