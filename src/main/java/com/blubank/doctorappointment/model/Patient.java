@@ -43,24 +43,10 @@ public class Patient {
     )
     private String phoneNumber;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(
-            name = "appointment_code",
-            referencedColumnName = "appointment_code"
-    )
-    private Appointment appointment;
-
     public Patient(Long id, String name, String phoneNumber) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
-    }
-
-    public Patient(Long id, String name, String phoneNumber, Appointment appointment) {
-        this.id = id;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.appointment = appointment;
     }
 
     public Patient() {
@@ -90,21 +76,12 @@ public class Patient {
         this.id = id;
     }
 
-    public Appointment getAppointment() {
-        return appointment;
-    }
-
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
-    }
-
     @Override
     public String toString() {
         return "Patient{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", appointmentCode=" + appointment.getAppointmentCode() +
                 '}';
     }
 }

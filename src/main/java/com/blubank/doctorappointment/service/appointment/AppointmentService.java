@@ -1,9 +1,6 @@
 package com.blubank.doctorappointment.service.appointment;
 
-import com.blubank.doctorappointment.dto.DeleteAppointmentRequestDTO;
-import com.blubank.doctorappointment.dto.InsertAppointmentRequestDTO;
-import com.blubank.doctorappointment.dto.OpenAppointmentListRequestDTO;
-import com.blubank.doctorappointment.dto.TakeOpenAppointmentRequestDTO;
+import com.blubank.doctorappointment.dto.*;
 import com.blubank.doctorappointment.model.ResponseModel;
 import org.springframework.stereotype.Service;
 
@@ -16,4 +13,6 @@ public interface AppointmentService  {
     ResponseModel takeOpenAppointment(TakeOpenAppointmentRequestDTO takeOpenAppointmentRequestDTO);
 
     ResponseModel getOpenAppointmentList(OpenAppointmentListRequestDTO openAppointmentListRequestDTO);
+
+    ResponseModel getTakenPatientAppointmentList(TakenPatientAppointmentListRequestDTO takenPatientAppointmentListRequestDTO);
 }

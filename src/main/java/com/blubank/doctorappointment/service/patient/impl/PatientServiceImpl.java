@@ -6,6 +6,8 @@ import com.blubank.doctorappointment.service.patient.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PatientServiceImpl implements PatientService {
 
@@ -20,4 +22,7 @@ public class PatientServiceImpl implements PatientService {
         return  patientRepoImpl.insertPatient(patient);
     }
 
+    public Optional<Patient> findPatientByPhoneNumber(String phoneNumber){
+        return patientRepoImpl.findPatientByPhoneNumber(phoneNumber);
+    }
 }

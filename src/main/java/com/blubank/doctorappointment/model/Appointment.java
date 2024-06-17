@@ -3,8 +3,8 @@ package com.blubank.doctorappointment.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity(name = "appointment")
@@ -69,6 +69,14 @@ public class Appointment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date insertDate;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(
+            name = "patient_id",
+            referencedColumnName = "id"
+    )
+    private Patient patient;
+
+
     public Appointment() {
     }
 
@@ -84,6 +92,23 @@ public class Appointment {
     public Appointment(String startTime, String endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
+    }
+
+    public Appointment(String startTime, String endTime, String appointmentCode, boolean isTaken, Date insertDate, Patient patient) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.appointmentCode = appointmentCode;
+        this.isTaken = isTaken;
+        this.insertDate = insertDate;
+        this.patient = patient;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public String getAppointmentCode() {
@@ -132,5 +157,18 @@ public class Appointment {
 
     public void setInsertDate(Date insertDate) {
         this.insertDate = insertDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", appointmentCode='" + appointmentCode + '\'' +
+                ", isTaken=" + isTaken +
+                ", insertDate=" + insertDate +
+                ", patient=" + patient +
+                '}';
     }
 }

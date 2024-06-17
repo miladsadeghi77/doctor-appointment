@@ -1,11 +1,10 @@
 package com.blubank.doctorappointment.service.appointment.impl;
 
 import com.blubank.doctorappointment.dao.GetOpenAppointmentListDAO;
-import com.blubank.doctorappointment.dto.DeleteAppointmentRequestDTO;
-import com.blubank.doctorappointment.dto.InsertAppointmentRequestDTO;
-import com.blubank.doctorappointment.dto.OpenAppointmentListRequestDTO;
-import com.blubank.doctorappointment.dto.TakeOpenAppointmentRequestDTO;
+import com.blubank.doctorappointment.dao.TakenPatientAppointmentListDao;
+import com.blubank.doctorappointment.dto.*;
 import com.blubank.doctorappointment.enums.ResponseStatus;
+import com.blubank.doctorappointment.mapper.TakenPatientAppointmentListMapper;
 import com.blubank.doctorappointment.model.Appointment;
 import com.blubank.doctorappointment.model.Patient;
 import com.blubank.doctorappointment.model.ResponseModel;
@@ -30,11 +29,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private AppointmentRepoImpl appointmentRepoImpl;
     private PatientServiceImpl patientServiceImpl;
+    private TakenPatientAppointmentListMapper takenPatientAppointmentListMapper;
 
     @Autowired
-    public AppointmentServiceImpl(AppointmentRepoImpl appointmentRepoImpl, PatientServiceImpl patientServiceImpl) {
+    public AppointmentServiceImpl(AppointmentRepoImpl appointmentRepoImpl, PatientServiceImpl patientServiceImpl, TakenPatientAppointmentListMapper takenPatientAppointmentListMapper) {
         this.appointmentRepoImpl = appointmentRepoImpl;
         this.patientServiceImpl = patientServiceImpl;
+        this.takenPatientAppointmentListMapper = takenPatientAppointmentListMapper;
     }
 
     private final int THIRTY_MINUTES_PERIODS = 30;
@@ -132,15 +133,16 @@ public class AppointmentServiceImpl implements AppointmentService {
             responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
             return responseModel;
 
-        } else if ( !openAppointment.isPresent()){
+        } else if (!openAppointment.isPresent()) {
             responseModel.setData(null);
             responseModel.setMessage("Not Found Appointment With The Appointment Code ");
             responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
             return responseModel;
         }
 
-        insertPatient(takeOpenAppointmentRequestDTO, openAppointment);
+        Patient patient = insertPatient(takeOpenAppointmentRequestDTO);
         openAppointment.get().setTaken(true);
+        openAppointment.get().setPatient(patient);
         appointmentRepoImpl.insertAppointment(openAppointment.get());
         String insertDate = AppointmentUtil.dateToString(openAppointment.get().getInsertDate());
         StringBuilder sb = new StringBuilder();
@@ -177,12 +179,35 @@ public class AppointmentServiceImpl implements AppointmentService {
         return responseModel;
     }
 
-    private void insertPatient(TakeOpenAppointmentRequestDTO takeOpenAppointmentRequestDTO, Optional<Appointment> openAppointment) {
+    @Override
+    public ResponseModel getTakenPatientAppointmentList(
+            TakenPatientAppointmentListRequestDTO takenPatientAppointmentListRequestDTO) {
+        ResponseModel responseModel = new ResponseModel();
+        List<TakenPatientAppointmentListResponseDTO> appointmentDTOList = new ArrayList<>();
+
+        Optional<Patient> patient = patientServiceImpl.findPatientByPhoneNumber(takenPatientAppointmentListRequestDTO.getPatientName());
+        if (patient.isPresent()) {
+            List<TakenPatientAppointmentListDao> appointmentDAOList =
+                    appointmentRepoImpl.findAppointmentByPatient(patient.get());
+
+            for (TakenPatientAppointmentListDao appointmentDAO : appointmentDAOList) {
+                appointmentDTOList.add(takenPatientAppointmentListMapper.convertToDTO(appointmentDAO));
+            }
+
+            responseModel.setMessage("Found " + appointmentDTOList.size() + " Number");
+        } else {
+            responseModel.setMessage("Not Found Any Appointment With phoneNumber ");
+        }
+        responseModel.setData(appointmentDTOList);
+        responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
+        return responseModel;
+    }
+
+    private Patient insertPatient(TakeOpenAppointmentRequestDTO takeOpenAppointmentRequestDTO) {
         Patient patientBeforeInsert = new Patient();
-        patientBeforeInsert.setAppointment(openAppointment.get());
         patientBeforeInsert.setName(takeOpenAppointmentRequestDTO.getName());
         patientBeforeInsert.setPhoneNumber(takeOpenAppointmentRequestDTO.getPhoneNumber());
-        patientServiceImpl.insertPatient(patientBeforeInsert);
+        return patientServiceImpl.insertPatient(patientBeforeInsert);
     }
 
 }

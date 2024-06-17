@@ -1,7 +1,9 @@
 package com.blubank.doctorappointment.repository.appointment.impl;
 
 import com.blubank.doctorappointment.dao.GetOpenAppointmentListDAO;
+import com.blubank.doctorappointment.dao.TakenPatientAppointmentListDao;
 import com.blubank.doctorappointment.model.Appointment;
+import com.blubank.doctorappointment.model.Patient;
 import com.blubank.doctorappointment.repository.appointment.AppointmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -44,6 +46,9 @@ public class AppointmentRepoImpl {
     public Optional<Appointment> findAppointmentByAppointmentCode(String appointmentCode){
         Optional<Appointment> appointment = appointmentRepo.findAppointmentByAppointmentCode(appointmentCode);
         return appointment;
+    }
+    public List<TakenPatientAppointmentListDao> findAppointmentByPatient(Patient patient){
+        return appointmentRepo.findAppointmentByPatient(patient);
     }
     public void deleteOpenAppointmentById(Long appointmentId) {
         try{

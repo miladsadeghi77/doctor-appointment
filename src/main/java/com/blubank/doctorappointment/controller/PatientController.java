@@ -2,6 +2,7 @@ package com.blubank.doctorappointment.controller;
 
 import com.blubank.doctorappointment.dto.OpenAppointmentListRequestDTO;
 import com.blubank.doctorappointment.dto.TakeOpenAppointmentRequestDTO;
+import com.blubank.doctorappointment.dto.TakenPatientAppointmentListRequestDTO;
 import com.blubank.doctorappointment.model.ResponseModel;
 import com.blubank.doctorappointment.service.appointment.impl.AppointmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +37,12 @@ public class PatientController {
 
         return new ResponseEntity(responseModel,null, HttpStatus.OK);
     }
+    @RequestMapping(path = "/getTakenPatientAppointmentList",method = RequestMethod.GET)
+    public ResponseEntity getTakenPatientAppointmentList(
+            @RequestBody TakenPatientAppointmentListRequestDTO takenPatientAppointmentListRequestDTO){
 
+        ResponseModel responseModel = doctorAppointmentService.getTakenPatientAppointmentList(takenPatientAppointmentListRequestDTO);
+
+        return new ResponseEntity(responseModel,null, HttpStatus.OK);
+    }
 }

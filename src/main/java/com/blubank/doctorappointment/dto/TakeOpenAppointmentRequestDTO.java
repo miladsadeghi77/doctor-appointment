@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class TakeOpenAppointmentRequestDTO {
     private String appointmentCode;
     private String name;
-
     private String phoneNumber;
 
 
