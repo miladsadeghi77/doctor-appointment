@@ -15,5 +15,5 @@ public interface AppointmentService  {
 
     ResponseModel takeOpenAppointment(TakeOpenAppointmentRequestDTO takeOpenAppointmentRequestDTO);
 
-    ResponseModel openAppointmentList(OpenAppointmentListRequestDTO openAppointmentListRequestDTO);
+    ResponseModel getOpenAppointmentList(OpenAppointmentListRequestDTO openAppointmentListRequestDTO);
 }
