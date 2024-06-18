@@ -11,7 +11,7 @@ import com.blubank.doctorappointment.mapper.GetAppointmentListMapper;
 import com.blubank.doctorappointment.mapper.TakenPatientAppointmentListMapper;
 import com.blubank.doctorappointment.model.Appointment;
 import com.blubank.doctorappointment.model.Patient;
-import com.blubank.doctorappointment.model.ResponseModel;
+import com.blubank.doctorappointment.model.response.ResponseModel;
 import com.blubank.doctorappointment.repository.appointment.impl.AppointmentRepoImpl;
 import com.blubank.doctorappointment.service.appointment.AppointmentService;
 import com.blubank.doctorappointment.service.patient.impl.PatientServiceImpl;
@@ -134,7 +134,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Date insertDate = AppointmentUtil.dateToString(openAppointmentListRequestDTO.getAppointmentDate());
         List<GetAppointmentListResponseDAO> appointmentListDAO = appointmentRepoImpl.getAppointmentByInsertDate(insertDate);
         for(GetAppointmentListResponseDAO appointmentDAO : appointmentListDAO){
-            appointmentListDTO.add(getAppointmentListMapper.convertDAOToDTO(appointmentDAO));
+            appointmentListDTO.add(getAppointmentListMapper.convertToDTO(appointmentDAO));
         }
         responseModel.setData(appointmentListDTO);
         responseModel.setMessage("Appointment List");

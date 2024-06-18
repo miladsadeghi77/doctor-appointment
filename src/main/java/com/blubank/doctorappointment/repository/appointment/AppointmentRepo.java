@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface AppointmentRepo extends JpaRepository<Appointment, Long> {
 
    @Query("select  new com.blubank.doctorappointment.dao.GetAppointmentListResponseDAO (" +
-            "a.startTime, a.endTime, a.insertDate, a.appointmentCode, a.isTaken, p.name, p.phoneNumber)" +
+            "a.startTime, a.endTime, a.appointmentCode, a.isTaken, p.name, p.phoneNumber)" +
             " from appointment a left join patient p on a.patient.id = p.id " +
             "where a.insertDate = :insertDate")
     List<GetAppointmentListResponseDAO> getAppointmentByInsertDate(Date insertDate);

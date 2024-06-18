@@ -1,7 +1,7 @@
 package com.blubank.doctorappointment.service.appointment;
 
 import com.blubank.doctorappointment.dto.request.*;
-import com.blubank.doctorappointment.model.ResponseModel;
+import com.blubank.doctorappointment.model.response.ResponseModel;
 import org.springframework.stereotype.Service;
 
 @Service
