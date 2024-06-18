@@ -15,12 +15,12 @@ public class GetAppointmentListMapper {
         this.modelMapper = modelMapper;
     }
 
-    public GetAppointmentListResponseDTO convertDAOToDTO(GetAppointmentListResponseDAO appointmentListDAO){
+    public GetAppointmentListResponseDTO convertToDTO(GetAppointmentListResponseDAO appointmentListDAO){
         return modelMapper.map(appointmentListDAO , GetAppointmentListResponseDTO.class);
     }
 
 
-    public GetAppointmentListResponseDAO convertDTOToDAO(GetAppointmentListResponseDTO appointmentListDTO){
+    public GetAppointmentListResponseDAO convertToDAO(GetAppointmentListResponseDTO appointmentListDTO){
         return modelMapper.map(appointmentListDTO , GetAppointmentListResponseDAO.class);
     }
 }

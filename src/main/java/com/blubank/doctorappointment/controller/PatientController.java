@@ -3,7 +3,7 @@ package com.blubank.doctorappointment.controller;
 import com.blubank.doctorappointment.dto.request.OpenAppointmentListRequestDTO;
 import com.blubank.doctorappointment.dto.request.TakeOpenAppointmentRequestDTO;
 import com.blubank.doctorappointment.dto.request.TakenPatientAppointmentListRequestDTO;
-import com.blubank.doctorappointment.model.ResponseModel;
+import com.blubank.doctorappointment.model.response.ResponseModel;
 import com.blubank.doctorappointment.service.appointment.impl.AppointmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
