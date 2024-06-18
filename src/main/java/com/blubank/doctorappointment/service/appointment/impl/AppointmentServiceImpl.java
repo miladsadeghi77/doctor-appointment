@@ -119,7 +119,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         } else if (openAppointment.isPresent() && openAppointment.get().isTaken()) {
             //If the appointment is taken by a patient, then a 406 error is shown
             responseModel.setData(Collections.singletonList(HttpStatus.NOT_ACCEPTABLE));
-            responseModel.setMessage("Not Found Open Appointment");
+            responseModel.setMessage("Appointment has been taken by the patient");
             responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
 
         } else {
