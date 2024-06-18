@@ -28,7 +28,6 @@ public class Patient {
             unique = true,
             nullable = false
     )
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
     @Column(
             name = "name",

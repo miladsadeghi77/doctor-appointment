@@ -4,14 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 
 @Entity(name = "appointment")
 @Table(
         name = "appointment",
         uniqueConstraints = {
-                @UniqueConstraint(name = "appointment_code_unique",columnNames = "appointment_code")
+                @UniqueConstraint(name = "appointment_code_unique", columnNames = "appointment_code")
         }
 )
 public class Appointment {
@@ -32,7 +31,6 @@ public class Appointment {
             unique = true,
             nullable = false
     )
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
     @Column(
             name = "start_time",

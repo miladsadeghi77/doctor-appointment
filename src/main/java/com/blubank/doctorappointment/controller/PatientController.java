@@ -17,24 +17,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PatientController {
 
-    @Autowired
     AppointmentServiceImpl doctorAppointmentService;
+    @Autowired
+    public PatientController(AppointmentServiceImpl doctorAppointmentService) {
+        this.doctorAppointmentService = doctorAppointmentService;
+    }
 
     @RequestMapping(path = "/getOpenAppointmentList",method = RequestMethod.GET)
     public ResponseEntity getOpenAppointmentList(@RequestBody OpenAppointmentListRequestDTO openAppointmentList){
 
-        System.out.println("POST Request.... " + openAppointmentList.toString());
         ResponseModel responseModel = doctorAppointmentService.getOpenAppointmentList(openAppointmentList);
-
         return new ResponseEntity(responseModel,null, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/takeOpenAppointment",method = RequestMethod.POST)
     public ResponseEntity takeOpenAppointment(@RequestBody TakeOpenAppointmentRequestDTO appointmentDTO){
-        //todo
-        System.out.println("POST Request.... " + appointmentDTO.toString());
-        ResponseModel responseModel = doctorAppointmentService.takeOpenAppointment(appointmentDTO);
 
+        ResponseModel responseModel = doctorAppointmentService.takeOpenAppointment(appointmentDTO);
         return new ResponseEntity(responseModel,null, HttpStatus.OK);
     }
     @RequestMapping(path = "/getTakenPatientAppointmentList",method = RequestMethod.GET)
@@ -42,7 +41,6 @@ public class PatientController {
             @RequestBody TakenPatientAppointmentListRequestDTO takenPatientAppointmentListRequestDTO){
 
         ResponseModel responseModel = doctorAppointmentService.getTakenPatientAppointmentList(takenPatientAppointmentListRequestDTO);
-
         return new ResponseEntity(responseModel,null, HttpStatus.OK);
     }
 }

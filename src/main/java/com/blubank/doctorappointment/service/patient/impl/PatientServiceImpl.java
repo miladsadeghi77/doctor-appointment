@@ -22,6 +22,13 @@ public class PatientServiceImpl implements PatientService {
         return  patientRepoImpl.insertPatient(patient);
     }
 
+    public Patient insertPatient(String name, String phoneNumber){
+        Patient patientBeforeInsert = new Patient();
+        patientBeforeInsert.setName(name);
+        patientBeforeInsert.setPhoneNumber(phoneNumber);
+        return  patientRepoImpl.insertPatient(patientBeforeInsert);
+    }
+
     public Optional<Patient> findPatientByPhoneNumber(String phoneNumber){
         return patientRepoImpl.findPatientByPhoneNumber(phoneNumber);
     }

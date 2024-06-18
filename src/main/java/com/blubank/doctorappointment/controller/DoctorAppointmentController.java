@@ -16,36 +16,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "api/v1/doctor-appointment")
 @RestController
 public class DoctorAppointmentController {
-
-    @Autowired
     AppointmentServiceImpl doctorAppointmentService;
 
-    @RequestMapping(path = "/insertAppointment",method = RequestMethod.POST)
-    public ResponseEntity insertAppointment(@RequestBody InsertAppointmentRequestDTO insertAppointment){
+    @Autowired
+    public DoctorAppointmentController(AppointmentServiceImpl doctorAppointmentService) {
+        this.doctorAppointmentService = doctorAppointmentService;
+    }
 
-        System.out.println("POST Request.... " + insertAppointment.toString());
+    @RequestMapping(path = "/insertAppointment", method = RequestMethod.POST)
+    public ResponseEntity insertAppointment(@RequestBody InsertAppointmentRequestDTO insertAppointment) {
+
         ResponseModel responseModel = doctorAppointmentService.insertAppointment(insertAppointment);
-
-        return new ResponseEntity(responseModel,null, HttpStatus.OK);
+        return new ResponseEntity(responseModel, null, HttpStatus.OK);
     }
 
-   @RequestMapping(path = "/getAppointmentList",method = RequestMethod.GET)
-    public ResponseEntity getAppointmentList(@RequestBody OpenAppointmentListRequestDTO openAppointmentListRequestDTO){
-        //todo
+    @RequestMapping(path = "/getAppointmentList", method = RequestMethod.GET)
+    public ResponseEntity getAppointmentList(@RequestBody OpenAppointmentListRequestDTO openAppointmentListRequestDTO) {
+
         ResponseModel responseModel = doctorAppointmentService.getAppointmentList(openAppointmentListRequestDTO);
-
-        return new ResponseEntity(responseModel,null, HttpStatus.OK);
+        return new ResponseEntity(responseModel, null, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/deleteOpenAppointment",method = RequestMethod.DELETE)
-    public ResponseEntity deleteOpenAppointment(@RequestBody DeleteAppointmentRequestDTO appointmentRequestDTO){
-        //todo
-        System.out.println("POST Request.... " + appointmentRequestDTO.toString());
+    @RequestMapping(path = "/deleteOpenAppointment", method = RequestMethod.DELETE)
+    public ResponseEntity deleteOpenAppointment(@RequestBody DeleteAppointmentRequestDTO appointmentRequestDTO) {
+
         ResponseModel responseModel = doctorAppointmentService.deleteAppointment(appointmentRequestDTO);
         HttpStatus httpStatus = (HttpStatus) responseModel.getData().get(0);
-
-        return new ResponseEntity(responseModel,null, httpStatus);
+        return new ResponseEntity(responseModel, null, httpStatus);
     }
-
-
 }

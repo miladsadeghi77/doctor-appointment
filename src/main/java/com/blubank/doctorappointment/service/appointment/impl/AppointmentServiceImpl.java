@@ -57,6 +57,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         LocalTime startTime = LocalTime.parse(insertAppointmentRequestDTO.getStartTime());
         LocalTime endTime = LocalTime.parse(insertAppointmentRequestDTO.getEndTime());
 
+        //f doctor enters an end date that is sooner than start date, appropriate error should be shown
         if (startTime.isAfter(endTime) || (startTime.compareTo(endTime) == 0)) {
             responseModel.setData(null);
             responseModel.setStatus(ResponseStatus.ERROR.getStatus());
@@ -83,7 +84,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             tempStartTime = tempStartTime.plusMinutes(THIRTY_MINUTES_PERIODS);
             tempEndTime = tempStartTime.plusMinutes(THIRTY_MINUTES_PERIODS);
         }
-
+        //add all appointments on db
         boolean isInsertedAllAppointments = appointmentRepoImpl.insertAllAppointment(appointmentList);
         if (!isInsertedAllAppointments) {
             responseModel.setData(null);
@@ -99,6 +100,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
 
+
+    @Transactional
+    @Async
     @Override
     public ResponseModel deleteAppointment(DeleteAppointmentRequestDTO deleteAppointmentRequestDTO) {
         ResponseModel responseModel = new ResponseModel();
@@ -113,11 +117,13 @@ public class AppointmentServiceImpl implements AppointmentService {
             responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
 
         } else if (openAppointment.isPresent() && openAppointment.get().isTaken()) {
+            //If the appointment is taken by a patient, then a 406 error is shown
             responseModel.setData(Collections.singletonList(HttpStatus.NOT_ACCEPTABLE));
             responseModel.setMessage("Not Found Open Appointment");
             responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
 
         } else {
+            //If there is no open appointment then 404 error is shown.
             responseModel.setData(Collections.singletonList(HttpStatus.NOT_FOUND));
             responseModel.setMessage("Not Found Appointment With The Appointment Code ");
             responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
@@ -166,7 +172,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         Patient patient = null;
         Optional<Patient> existPatient = patientServiceImpl.findPatientByPhoneNumber(takeOpenAppointmentRequestDTO.getPhoneNumber());
         if (!existPatient.isPresent()) {
-            patient = insertPatient(takeOpenAppointmentRequestDTO);
+            patient =  patientServiceImpl.insertPatient(
+                    takeOpenAppointmentRequestDTO.getName(),
+                    takeOpenAppointmentRequestDTO.getPhoneNumber()
+            );
+
         } else {
             patient = existPatient.get();
         }
@@ -232,11 +242,5 @@ public class AppointmentServiceImpl implements AppointmentService {
         return responseModel;
     }
 
-    private Patient insertPatient(TakeOpenAppointmentRequestDTO takeOpenAppointmentRequestDTO) {
-        Patient patientBeforeInsert = new Patient();
-        patientBeforeInsert.setName(takeOpenAppointmentRequestDTO.getName());
-        patientBeforeInsert.setPhoneNumber(takeOpenAppointmentRequestDTO.getPhoneNumber());
-        return patientServiceImpl.insertPatient(patientBeforeInsert);
-    }
 
 }

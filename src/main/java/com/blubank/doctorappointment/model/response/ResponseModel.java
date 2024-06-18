@@ -1,4 +1,4 @@
-package com.blubank.doctorappointment.model;
+package com.blubank.doctorappointment.model.response;
 
 import java.util.List;
 

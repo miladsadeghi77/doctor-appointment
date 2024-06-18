@@ -26,9 +26,6 @@ public interface AppointmentRepo extends JpaRepository<Appointment, Long> {
             " a.startTime, a.endTime, a.appointmentCode)  from appointment a where a.isTaken = false and a.insertDate = :insertDate")
     List<GetOpenAppointmentListDAO> findByTakenFalseAndInsertDate(Date insertDate);
 
-   /* @Query("DELETE from appointment a where a.isTaken = false And a.appointmentCode = :appointmentCode")
-    Boolean removeAppointmentByAppointmentCode(String appointmentCode)*/
-
     @Query("select a from appointment a where a.appointmentCode = :appointmentCode ")
     Optional<Appointment> findAppointmentByAppointmentCode(String appointmentCode);
 

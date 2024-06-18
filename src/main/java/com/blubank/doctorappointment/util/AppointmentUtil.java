@@ -11,7 +11,7 @@ public class AppointmentUtil {
 
     public static String generatedAppointmentCode() {
 
-        // 5 digits.
+        // Generated 5 digits.
         long id = System.currentTimeMillis() % LIMIT;
         if (id <= last) {
             id = (last + 1) % LIMIT;
