@@ -9,10 +9,8 @@ public interface AppointmentService  {
 
     ResponseModel insertAppointment(InsertAppointmentRequestDTO insertAppointmentRequestDTO);
     ResponseModel deleteAppointment(DeleteAppointmentRequestDTO deleteAppointmentRequestDTO);
-
+    ResponseModel getAppointmentList(OpenAppointmentListRequestDTO openAppointmentListRequestDTO);
     ResponseModel takeOpenAppointment(TakeOpenAppointmentRequestDTO takeOpenAppointmentRequestDTO);
-
     ResponseModel getOpenAppointmentList(OpenAppointmentListRequestDTO openAppointmentListRequestDTO);
-
     ResponseModel getTakenPatientAppointmentList(TakenPatientAppointmentListRequestDTO takenPatientAppointmentListRequestDTO);
 }

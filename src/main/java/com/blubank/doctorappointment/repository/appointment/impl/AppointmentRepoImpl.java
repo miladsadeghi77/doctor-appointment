@@ -1,5 +1,6 @@
 package com.blubank.doctorappointment.repository.appointment.impl;
 
+import com.blubank.doctorappointment.dao.GetAppointmentListResponseDAO;
 import com.blubank.doctorappointment.dao.GetOpenAppointmentListDAO;
 import com.blubank.doctorappointment.dao.TakenPatientAppointmentListDao;
 import com.blubank.doctorappointment.model.Appointment;
@@ -23,37 +24,43 @@ public class AppointmentRepoImpl {
         this.appointmentRepo = appointmentRepo;
     }
 
-    public Appointment insertAppointment(Appointment appointment){
+    public Appointment insertAppointment(Appointment appointment) {
         return appointmentRepo.save(appointment);
     }
 
-    public boolean insertAllAppointment(List<Appointment> appointmentList){
+    public boolean insertAllAppointment(List<Appointment> appointmentList) {
         boolean flag = false;
         try {
             appointmentRepo.saveAll(appointmentList);
             flag = true;
-        }catch (Exception ignore){}
-        finally {
+        } catch (Exception ignore) {
+        } finally {
             return flag;
         }
     }
 
-    public List<GetOpenAppointmentListDAO> getOpenAppointmentList(Date insertDate){
+    public List<GetOpenAppointmentListDAO> getOpenAppointmentList(Date insertDate) {
         List<GetOpenAppointmentListDAO> appointmentList = appointmentRepo.findByTakenFalseAndInsertDate(insertDate);
         return appointmentList;
     }
 
-    public Optional<Appointment> findAppointmentByAppointmentCode(String appointmentCode){
+    public Optional<Appointment> findAppointmentByAppointmentCode(String appointmentCode) {
         Optional<Appointment> appointment = appointmentRepo.findAppointmentByAppointmentCode(appointmentCode);
         return appointment;
     }
-    public List<TakenPatientAppointmentListDao> findAppointmentByPatient(Patient patient){
+
+    public List<TakenPatientAppointmentListDao> findAppointmentByPatient(Patient patient) {
         return appointmentRepo.findAppointmentByPatient(patient);
     }
+
     public void deleteOpenAppointmentById(Long appointmentId) {
-        try{
+        try {
             appointmentRepo.deleteById(appointmentId);
-        }catch (Exception ignore){}
+        } catch (Exception ignore) {
+        }
     }
 
+    public List<GetAppointmentListResponseDAO> getAppointmentByInsertDate(Date insertDate) {
+        return appointmentRepo.getAppointmentByInsertDate(insertDate);
+    }
 }

@@ -1,10 +1,13 @@
 package com.blubank.doctorappointment.service.appointment.impl;
 
+import com.blubank.doctorappointment.dao.GetAppointmentListResponseDAO;
 import com.blubank.doctorappointment.dao.GetOpenAppointmentListDAO;
 import com.blubank.doctorappointment.dao.TakenPatientAppointmentListDao;
 import com.blubank.doctorappointment.dto.request.*;
+import com.blubank.doctorappointment.dto.response.GetAppointmentListResponseDTO;
 import com.blubank.doctorappointment.dto.response.TakenPatientAppointmentListResponseDTO;
 import com.blubank.doctorappointment.enums.ResponseStatus;
+import com.blubank.doctorappointment.mapper.GetAppointmentListMapper;
 import com.blubank.doctorappointment.mapper.TakenPatientAppointmentListMapper;
 import com.blubank.doctorappointment.model.Appointment;
 import com.blubank.doctorappointment.model.Patient;
@@ -31,12 +34,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     private AppointmentRepoImpl appointmentRepoImpl;
     private PatientServiceImpl patientServiceImpl;
     private TakenPatientAppointmentListMapper takenPatientAppointmentListMapper;
+    private GetAppointmentListMapper getAppointmentListMapper;
 
     @Autowired
-    public AppointmentServiceImpl(AppointmentRepoImpl appointmentRepoImpl, PatientServiceImpl patientServiceImpl, TakenPatientAppointmentListMapper takenPatientAppointmentListMapper) {
+    public AppointmentServiceImpl(AppointmentRepoImpl appointmentRepoImpl, PatientServiceImpl patientServiceImpl, TakenPatientAppointmentListMapper takenPatientAppointmentListMapper, GetAppointmentListMapper getAppointmentListMapper) {
         this.appointmentRepoImpl = appointmentRepoImpl;
         this.patientServiceImpl = patientServiceImpl;
         this.takenPatientAppointmentListMapper = takenPatientAppointmentListMapper;
+        this.getAppointmentListMapper = getAppointmentListMapper;
     }
 
     private final int THIRTY_MINUTES_PERIODS = 30;
@@ -93,6 +98,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         return responseModel;
     }
 
+
     @Override
     public ResponseModel deleteAppointment(DeleteAppointmentRequestDTO deleteAppointmentRequestDTO) {
         ResponseModel responseModel = new ResponseModel();
@@ -118,6 +124,22 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         return responseModel;
 
+    }
+
+    @Override
+    public ResponseModel getAppointmentList(OpenAppointmentListRequestDTO openAppointmentListRequestDTO) {
+        ResponseModel responseModel = new ResponseModel();
+        List<GetAppointmentListResponseDTO> appointmentListDTO  = new ArrayList<>();
+
+        Date insertDate = AppointmentUtil.dateToString(openAppointmentListRequestDTO.getAppointmentDate());
+        List<GetAppointmentListResponseDAO> appointmentListDAO = appointmentRepoImpl.getAppointmentByInsertDate(insertDate);
+        for(GetAppointmentListResponseDAO appointmentDAO : appointmentListDAO){
+            appointmentListDTO.add(getAppointmentListMapper.convertDAOToDTO(appointmentDAO));
+        }
+        responseModel.setData(appointmentListDTO);
+        responseModel.setMessage("Appointment List");
+        responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
+        return responseModel;
     }
 
     @Async

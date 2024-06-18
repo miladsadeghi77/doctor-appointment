@@ -2,6 +2,7 @@ package com.blubank.doctorappointment.controller;
 
 import com.blubank.doctorappointment.dto.request.DeleteAppointmentRequestDTO;
 import com.blubank.doctorappointment.dto.request.InsertAppointmentRequestDTO;
+import com.blubank.doctorappointment.dto.request.OpenAppointmentListRequestDTO;
 import com.blubank.doctorappointment.model.ResponseModel;
 import com.blubank.doctorappointment.service.appointment.impl.AppointmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,13 @@ public class DoctorAppointmentController {
         return new ResponseEntity(responseModel,null, HttpStatus.OK);
     }
 
-   /* @RequestMapping(path = "/getAppointmentList",method = RequestMethod.GET)
-    public ResponseEntity getAppointmentList(){
+   @RequestMapping(path = "/getAppointmentList",method = RequestMethod.GET)
+    public ResponseEntity getAppointmentList(@RequestBody OpenAppointmentListRequestDTO openAppointmentListRequestDTO){
         //todo
-        ResponseModel responseModel = doctorAppointmentService.getAppointmentList();
+        ResponseModel responseModel = doctorAppointmentService.getAppointmentList(openAppointmentListRequestDTO);
 
         return new ResponseEntity(responseModel,null, HttpStatus.OK);
-    }*/
+    }
 
     @RequestMapping(path = "/deleteOpenAppointment",method = RequestMethod.DELETE)
     public ResponseEntity deleteOpenAppointment(@RequestBody DeleteAppointmentRequestDTO appointmentRequestDTO){
