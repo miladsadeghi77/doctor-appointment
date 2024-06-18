@@ -1,5 +1,6 @@
-package com.blubank.doctorappointment.dto;
+package com.blubank.doctorappointment.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,20 +8,21 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TakenPatientAppointmentListResponseDTO {
-
+public class InsertAppointmentRequestDTO {
     private String startTime;
     private String endTime;
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd")
     private String insertDate;
-    private String appointmentCode;
+
 
     @Override
     public String toString() {
-        return "TakenPatientAppointmentListResponseDTO{" +
+        return "InsertAppointmentRequestDTO{" +
                 "startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
                 ", insertDate='" + insertDate + '\'' +
-                ", appointmentCode='" + appointmentCode + '\'' +
                 '}';
     }
 }

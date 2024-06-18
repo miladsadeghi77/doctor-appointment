@@ -2,7 +2,8 @@ package com.blubank.doctorappointment.service.appointment.impl;
 
 import com.blubank.doctorappointment.dao.GetOpenAppointmentListDAO;
 import com.blubank.doctorappointment.dao.TakenPatientAppointmentListDao;
-import com.blubank.doctorappointment.dto.*;
+import com.blubank.doctorappointment.dto.request.*;
+import com.blubank.doctorappointment.dto.response.TakenPatientAppointmentListResponseDTO;
 import com.blubank.doctorappointment.enums.ResponseStatus;
 import com.blubank.doctorappointment.mapper.TakenPatientAppointmentListMapper;
 import com.blubank.doctorappointment.model.Appointment;
@@ -139,10 +140,17 @@ public class AppointmentServiceImpl implements AppointmentService {
             responseModel.setStatus(ResponseStatus.SUCCESS.getStatus());
             return responseModel;
         }
-
-        Patient patient = insertPatient(takeOpenAppointmentRequestDTO);
+        //add patient to appointment
+        Patient patient = null;
+        Optional<Patient> existPatient = patientServiceImpl.findPatientByPhoneNumber(takeOpenAppointmentRequestDTO.getPhoneNumber());
+        if (!existPatient.isPresent()) {
+            patient = insertPatient(takeOpenAppointmentRequestDTO);
+        } else {
+            patient = existPatient.get();
+        }
         openAppointment.get().setTaken(true);
         openAppointment.get().setPatient(patient);
+        //
         appointmentRepoImpl.insertAppointment(openAppointment.get());
         String insertDate = AppointmentUtil.dateToString(openAppointment.get().getInsertDate());
         StringBuilder sb = new StringBuilder();
@@ -185,7 +193,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         ResponseModel responseModel = new ResponseModel();
         List<TakenPatientAppointmentListResponseDTO> appointmentDTOList = new ArrayList<>();
 
-        Optional<Patient> patient = patientServiceImpl.findPatientByPhoneNumber(takenPatientAppointmentListRequestDTO.getPatientName());
+        Optional<Patient> patient = patientServiceImpl.findPatientByPhoneNumber(takenPatientAppointmentListRequestDTO.getPhoneNumber());
         if (patient.isPresent()) {
             List<TakenPatientAppointmentListDao> appointmentDAOList =
                     appointmentRepoImpl.findAppointmentByPatient(patient.get());
@@ -193,8 +201,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             for (TakenPatientAppointmentListDao appointmentDAO : appointmentDAOList) {
                 appointmentDTOList.add(takenPatientAppointmentListMapper.convertToDTO(appointmentDAO));
             }
-
-            responseModel.setMessage("Found " + appointmentDTOList.size() + " Number");
+            responseModel.setMessage("Found " + appointmentDTOList.size() + " Appointment");
         } else {
             responseModel.setMessage("Not Found Any Appointment With phoneNumber ");
         }

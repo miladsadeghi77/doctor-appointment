@@ -1,4 +1,4 @@
-package com.blubank.doctorappointment.dto;
+package com.blubank.doctorappointment.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TakenPatientAppointmentListRequestDTO {
 
-    private String patientName;
+    private String phoneNumber;
 
     @Override
     public String toString() {
         return "TakenPatientAppointmentListRequestDTO{" +
-                "patientName='" + patientName + '\'' +
+                "phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 }

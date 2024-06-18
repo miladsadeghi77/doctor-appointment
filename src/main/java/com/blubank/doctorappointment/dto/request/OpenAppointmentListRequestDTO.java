@@ -1,4 +1,4 @@
-package com.blubank.doctorappointment.dto;
+package com.blubank.doctorappointment.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

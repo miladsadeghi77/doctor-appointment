@@ -1,6 +1,6 @@
 package com.blubank.doctorappointment.service.appointment;
 
-import com.blubank.doctorappointment.dto.*;
+import com.blubank.doctorappointment.dto.request.*;
 import com.blubank.doctorappointment.model.ResponseModel;
 import org.springframework.stereotype.Service;
 

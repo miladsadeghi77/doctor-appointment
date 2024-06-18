@@ -1,7 +1,7 @@
 package com.blubank.doctorappointment.controller;
 
-import com.blubank.doctorappointment.dto.DeleteAppointmentRequestDTO;
-import com.blubank.doctorappointment.dto.InsertAppointmentRequestDTO;
+import com.blubank.doctorappointment.dto.request.DeleteAppointmentRequestDTO;
+import com.blubank.doctorappointment.dto.request.InsertAppointmentRequestDTO;
 import com.blubank.doctorappointment.model.ResponseModel;
 import com.blubank.doctorappointment.service.appointment.impl.AppointmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
